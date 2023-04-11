@@ -3,7 +3,7 @@ import time
 
 inicio = (time.time())  # em segundos
 
-arq = open('FlyFood/matriz2.txt', 'r')
+arq = open('FlyFood/matriz3.txt', 'r')
 matriz = (arq.readlines())
 
 tam_populacao = 100
@@ -148,35 +148,35 @@ def mutacao(populacao):
 
         return populacao
 
-def rota_e_dist(populacao):
-    menor_dist = avaliar_individuo(populacao[0])
-    menor_cam = [populacao[0]]
-    for i in populacao:
-        if avaliar_individuo(i) <= menor_dist:
-            menor_dist = avaliar_individuo(i)
-            menor_cam = i
-    return (menor_cam, menor_dist)
-
-
 def pegaLocais(caminho):
     rota = []
     for i in caminho:
         rota.append(i[0])
     return "".join(rota)
 
-
-def main():
-    pop = gerar_pop_inicial(individuo)
-
+def algoritmo_genetico():
+    pop_atual = gerar_pop_inicial(individuo)
+    
     for geracao in range(parada):
-        selecionados = torneiocomelitismo(pop)
-        pop = cruzamento_ordenado(selecionados)
-        mutacao(pop)
+        nova_pop = []
+        
+        selecionados = torneio(pop_atual)
+        filhos = cruzamento_ordenado(selecionados)
+        mutacao(filhos)
+                
+        # Adiciona os indivíduos selecionados e os filhos na nova população
+        nova_pop.extend(selecionados)
+        nova_pop.extend(filhos)
+        
+        # Organiza os indivíduos e remove os menos aptos para limitar o tamanho da população
+        nova_pop.sort(key=avaliar_individuo)
+        pop_atual = nova_pop[:tam_populacao]
+        
+    # Retorna o indivíduo mais apto da última população gerada
+    pop_atual.sort(key=avaliar_individuo)
+    return print(f"A menor rota eh {pegaLocais(pop_atual[0])}, com distancia de {avaliar_individuo(pop_atual[0])} dronometros")
 
-    caminho, distancia = rota_e_dist(pop)
-    print(f"A menor rota eh {pegaLocais(caminho)}, com distancia de {distancia} dronometros")
-
-main()
+algoritmo_genetico()
 
 final = (time.time())  # em segundos
 tempo = final - inicio
