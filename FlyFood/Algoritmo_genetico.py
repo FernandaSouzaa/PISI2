@@ -3,7 +3,7 @@ import time
 
 inicio = (time.time())  # em segundos
 
-arq = open('FlyFood/arquivo.txt', 'r')
+arq = open('FlyFood/matriz2.txt', 'r')
 matriz = (arq.readlines())
 
 tam_populacao = 100
@@ -65,6 +65,35 @@ def torneio(populacao):
             selecionados.append(ind2)
     return selecionados
 
+def torneiocomelitismo(populacao):
+    selecionados = []
+    pop = len(populacao)
+    i = 0
+    j = 1
+    while(i < pop and j < pop):
+
+        ind1 = populacao[i]
+        ind2 = populacao[j]
+
+        if avaliar_individuo(ind1) < avaliar_individuo(ind2):
+            selecionados.append(ind1)
+        else:
+            selecionados.append(ind2)
+        i += 1
+        j += 1
+
+    menor_dist = avaliar_individuo(populacao[0])
+    menor_cam = [populacao[0]]
+
+    for n in populacao:
+        if avaliar_individuo(n) <= menor_dist:
+            menor_dist = avaliar_individuo(n)
+            menor_cam = n
+    selecionados.append(menor_cam)
+
+    return selecionados
+
+
 def cruzamento_ordenado(populacao):
     filhos = []
 
@@ -108,18 +137,16 @@ def cruzamento_ordenado(populacao):
     return filhos
 
 def mutacao(populacao):
-
-    if random.random() < taxa_mutacao:
-
+        
         for i in range(len(populacao)):
+            if random.random() < taxa_mutacao:
                 # Seleciona dois genes aleatórios para trocar
                 index1 = random.randint(0, len(populacao[i]) - 1)
                 index2 = random.randint(0, len(populacao[i]) - 1)
-
                 # Troca os valores dos genes selecionados
                 populacao[i][index1], populacao[i][index2] = populacao[i][index2], populacao[i][index1]
 
-    return populacao
+        return populacao
 
 def rota_e_dist(populacao):
     menor_dist = avaliar_individuo(populacao[0])
@@ -142,12 +169,12 @@ def main():
     pop = gerar_pop_inicial(individuo)
 
     for geracao in range(parada):
-        selecionados = torneio(pop)
+        selecionados = torneiocomelitismo(pop)
         pop = cruzamento_ordenado(selecionados)
         mutacao(pop)
 
     caminho, distancia = rota_e_dist(pop)
-    print(f"A menor rota é {pegaLocais(caminho)}, com distância de {distancia} dronômetros")
+    print(f"A menor rota eh {pegaLocais(caminho)}, com distancia de {distancia} dronometros")
 
 main()
 
