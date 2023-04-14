@@ -3,7 +3,7 @@ import time
 
 inicio = (time.time())  # em segundos
 
-arq = open('FlyFood/matriz3.txt', 'r')
+arq = open('FlyFood/matriz4.txt', 'r')
 matriz = (arq.readlines())
 
 tam_populacao = 100
