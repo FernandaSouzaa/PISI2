@@ -1,4 +1,4 @@
-arq = open('FlyFood/matriz2.txt', 'r')
+arq = open('FlyFood/matriz1.txt', 'r')
 matriz = (arq.readlines())
 
 def pontos(matriz):
